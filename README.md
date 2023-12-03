@@ -1,4 +1,4 @@
-# iNotebook-server
+# iNotebook-Site
 
 ## Check out the iNotebook at below:-
 
