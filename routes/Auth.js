@@ -56,7 +56,7 @@ router.post(
         signup=true;
         return res
           .status(200)
-          .json({authToken, signup, msg: "User Created Successfully"});
+          .json({authToken, signup, msg: "User Created Successfully",userName:user.name});
       });
       
     } catch (error) {
@@ -102,7 +102,7 @@ router.post(
       };
       const authToken = jwt.sign(data, JWT_SECRET);
       login=true;
-      res.json({ login,authToken,msg:"You have succesfully logged in!!" });
+      res.json({ login,authToken,msg:"You have succesfully logged in!!",userName:user.name });
     } catch (error) {
       res.status(500).send({login,msg:"Server Error, Try Again!!"});
     }
