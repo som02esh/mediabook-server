@@ -4,11 +4,11 @@ var cors = require('cors')
 require('dotenv').config();
 
 // connection with mongo
-connectDb(process.env.DB_URL)
+connectDb("mongodb+srv://someshgupta9234:somesh%4091@cluster1.95fp9ij.mongodb.net/notebook")
 
 // app and port
 const app=express();
-const port= process.env.PORT || 4000;
+const port= process.env.PORT || 5000;
 
 // Using to resolve cors blocking policy
 app.use(cors())

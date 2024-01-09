@@ -19,6 +19,13 @@ const NoteSchema= new mongoose.Schema({
     },
     userId:{
 
+    },
+    postImg:{
+        type:String,
+        required:true
+    },
+    uname:{
+        type:String
     }
 })
 
