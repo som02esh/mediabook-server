@@ -2,7 +2,10 @@
   const fetchUSer = require("../middleware/fetchUser");
   const router = express.Router();
   const Notes = require("../models/Notes");
-  const User=require("../models/User")
+  const Likes=require("../models/Likes")
+  const User=require("../models/User");
+  const Comments=require("../models/Comment")
+const { set } = require("mongoose");
   // ROUTE 1: Creating a note using:POST on '/api/notes/createNote' ; Require authentication
 
   router.post("/createNote", fetchUSer, async (req, res) => {
@@ -108,6 +111,100 @@
         res.status(500).send({msg:"Internal Server Error"})
     }
 })
+
+router.post('/like', async (req, res) => {
+  const { postId, userId } = req.body;
+
+  try {
+      const existingLike = await Likes.findOne({ post_id: postId, user_id: userId });
+
+      if (!existingLike) {
+          // If the user hasn't liked the post, insert the like
+          await Likes.create({ post_id: postId, user_id: userId });
+      } else {
+          // If the user has already liked the post, delete the like
+          await Likes.deleteOne({ post_id: postId, user_id: userId });
+      }
+
+      res.send({ success: true});
+  } catch (err) {
+      console.error('Error handling like/unlike:', err);
+      res.status(500).send({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+router.get('/getLikes/:postId', async (req, res) => {
+  const postId = req.params.postId;
+
+  try {
+      const likeCount = await Likes.countDocuments({ post_id: postId });
+      res.json({ likeCount });
+  } catch (err) {
+      console.error('Error getting like count:', err);
+      res.status(500).send({ error: 'Internal Server Error' });
+  }
+});
+
+
+router.post('/getLikeStatus', async (req, res) => {
+  const { postId, userId } = req.body;
+
+  try {
+      const existingLike = await Likes.findOne({ post_id: postId, user_id: userId });
+      if (!existingLike) {
+          // If the user hasn't liked the post, insert the like
+          res.json({status:false})
+      } else {
+          // If the user has already liked the post, delete the like
+          res.json({status:true})
+      }
+  } catch (err) {
+      console.error('Error handling like/unlike:', err);
+      res.status(500).send({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+
+router.post('/comment', async (req, res) => {
+  const { postId, userId ,comment} = req.body;
+
+  try {
+      await Comments.create({ post_id: postId, user_id: userId,comment });
+      res.send({ success: true});
+  } catch (err) {
+      console.error('Error handling comments', err);
+      res.status(500).send({ success: false, error: 'Internal Server Error' });
+  }
+});
+
+router.post('/getComment', async (req, res) => {
+  const { postId, userId } = req.body;
+  try {
+    const allComments = await Notes.find({ post_id: postId, user_id: userId});
+      res.send({allComments});
+  } catch (err) {
+      console.error('Error handling comments', err);
+      res.status(500).send({error: 'Internal Server Error' });
+  }
+});
+// router.post('/setLikes',async (req,res)=>{
+//   try {
+//     const id=req.body.id
+//     const count=req.body.count;
+//     // console.log(id)
+//     await Notes.findByIdAndUpdate(
+//       {_id:id},
+//       { $set: {likes:count}},
+//       { new: true }
+//     );
+//     //  await Notes.findOneAndUpdate({_id: id}, {$set: {likes: count}}, {new: true});
+//   } catch (error) {
+//       console.error(error.message)
+//       // res.status(500).send({msg:"Internal Server Error"})
+//   }
+// })
+
+
 
   router.get("/message", async (req, res) => {
     try {

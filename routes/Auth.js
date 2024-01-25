@@ -147,7 +147,7 @@ router.post('/loginUser',async (req,res)=>{
             }
         }
             const authToken =jwt.sign(data,JWT_SECRET);
-            res.json({authToken,login,msg:"Successfully Login",userName:user.name})
+            res.json({authToken,login,msg:"Successfully Login",userName:user.name,userId:user._id})
         
     } catch (error) {
         console.log(error.message)

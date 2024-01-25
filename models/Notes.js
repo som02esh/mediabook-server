@@ -17,6 +17,10 @@ const NoteSchema= new mongoose.Schema({
         type:Date,
         default:Date.now
     },
+    likes:{
+        type:Number,
+        default:0
+    },
     userId:{
 
     },
