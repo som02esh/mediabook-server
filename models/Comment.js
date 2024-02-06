@@ -6,6 +6,9 @@ const commentSchema= new mongoose.Schema({
     post_id:{
         type: String,
     },
+    uname:{
+        type:String,
+    },
     comment:{
         type:String,
     }

@@ -99,6 +99,15 @@ const { set } = require("mongoose");
     }
   });
 
+  router.post("/getParticularNote", async (req, res) => {
+    try {
+      const particularnote = await Notes.findById( req.body.post_id);
+      res.send({particularnote});
+    } catch (error) {
+      res.status(404).send({ error: "No notes found for this user" });
+    }
+  });
+
   router.post('/getPostUser',async (req,res)=>{
     try {
          const userId=req.body.id;
@@ -164,29 +173,49 @@ router.post('/getLikeStatus', async (req, res) => {
   }
 });
 
-
-router.post('/comment', async (req, res) => {
-  const { postId, userId ,comment} = req.body;
+router.post('/add_comment', async (req, res) => {
+  const { postId, userId ,uname,comment} = req.body;
 
   try {
-      await Comments.create({ post_id: postId, user_id: userId,comment });
-      res.send({ success: true});
+      await Comments.create({ user_id: userId, post_id: postId,uname,comment});
+      res.json({ success: true, message: 'Comment added successfully' });
   } catch (err) {
       console.error('Error handling comments', err);
       res.status(500).send({ success: false, error: 'Internal Server Error' });
   }
 });
 
-router.post('/getComment', async (req, res) => {
-  const { postId, userId } = req.body;
-  try {
-    const allComments = await Notes.find({ post_id: postId, user_id: userId});
-      res.send({allComments});
-  } catch (err) {
-      console.error('Error handling comments', err);
-      res.status(500).send({error: 'Internal Server Error' });
-  }
+router.get('/get_comments/:postId', async(req, res) => {
+  const postId = req.params.postId;
+  const postComments = await Comments.find({ post_id: postId }).lean();
+  res.json({ comments: postComments });
 });
+
+
+// router.post('/comment', async (req, res) => {
+//   const { postId, userId ,comment} = req.body;
+
+//   try {
+//       await Comments.create({ post_id: postId, user_id: userId,comment });
+//       res.send({ success: true});
+//   } catch (err) {
+//       console.error('Error handling comments', err);
+//       res.status(500).send({ success: false, error: 'Internal Server Error' });
+//   }
+// });
+
+// router.post('/getComment', async (req, res) => {
+//   const { postId, userId } = req.body;
+//   try {
+//     const allComments = await Notes.find({ post_id: postId, user_id: userId});
+//       res.send({allComments});
+//   } catch (err) {
+//       console.error('Error handling comments', err);
+//       res.status(500).send({error: 'Internal Server Error' });
+//   }
+// });
+
+
 // router.post('/setLikes',async (req,res)=>{
 //   try {
 //     const id=req.body.id
