@@ -21,6 +21,7 @@ app.use(
 // Available Routes
 app.use('/api/auth',require("./routes/Auth"))
 app.use('/api/notes',require("./routes/Notes"))
+app.use('/api/user',require("./routes/Connections"))
 
 
 app.get('/',(req,res)=>{
