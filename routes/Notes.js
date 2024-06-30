@@ -48,7 +48,7 @@ const { set } = require("mongoose");
       if (title) newNote.title = title;
       if (description) newNote.description = description;
       if (tag) newNote.tag = tag;
-      if(postImg) newNote.postImg=postImg;
+      if(postImg!="") newNote.postImg=postImg;
 
       const id = req.params.id;
       let note = await Notes.findById(id);
@@ -174,10 +174,10 @@ router.post('/getLikeStatus', async (req, res) => {
 });
 
 router.post('/add_comment', async (req, res) => {
-  const { postId, userId ,uname,comment} = req.body;
+  const { postId, userId ,uname,comment,postImg} = req.body;
 
   try {
-      await Comments.create({ user_id: userId, post_id: postId,uname,comment});
+      await Comments.create({ user_id: userId, post_id: postId,uname,comment,profilePhoto:postImg});
       res.json({ success: true, message: 'Comment added successfully' });
   } catch (err) {
       console.error('Error handling comments', err);

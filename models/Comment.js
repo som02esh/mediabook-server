@@ -11,6 +11,9 @@ const commentSchema= new mongoose.Schema({
     },
     comment:{
         type:String,
+    },
+    profilePhoto:{
+        type:String,
     }
 });
 
